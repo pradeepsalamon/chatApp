@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            height: 80vh;
+            width: 60vw;
+            background-color: rgb(174, 129, 62);
+            border-radius: 7px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: space-around;
+        }
+
+        .container form{
+            width: 70%;
+            height: 20%;
+            position: absolute;
+            bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        } 
+
+        input[type='text'] {
+            width: 60%;
+            margin: 10px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .messages{
+            height: 80%;
+            width: 95%;
+            margin: 10px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages div{
+            width: max-content;
+            margin: 10px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .messages .send{
+            background-color: aqua;
+            align-self: end;
+        }
+        .messages .received{
+            background-color: aquamarine;
+            align-self: start;
+        }
+        h1{
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="messages"><center><h1>{{ roomame }}</h1></center>
+            {% for i in messages %}
+                {% if i.sender == username %}
+                    <div class="send">{{ i.message }}</div>
+                {% else %}
+                    <div class="received">{{ i.message }}, {{ i.sender }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <form onsubmit="work(event)">
+            <input type="text" name="message" id="message" placeholder="enter message" required>
+            <input type="submit" value="send">
+        </form>
+    </div>
+    <script>
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:'
+        const roomame = `{{ roomame }}`
+        const username = `{{ username }}`
+        let url = `${protocol}//${window.location.host}/ws/socket-server/${roomame}/`
+        chatSocket = new WebSocket(url)
+
+        chatSocket.onopen = e => {
+            console.log('connected')
+        }
+        chatSocket.onclose = e => {
+            console.log('closed')
+        }
+
+        chatSocket.onmessage = e => {
+            let data = JSON.parse(e.data).data
+            
+            if (username !== data.sender)
+            document.querySelector('.messages').innerHTML += `<div class="received">${data.message}, ${data.sender}</div>`
+        }
+
+        function work(event){
+            event.preventDefault();
+            let message = document.getElementById('message')
+            document.querySelector('.messages').innerHTML += `<div class="send">${message.value}</div>`
+            chatSocket.send(JSON.stringify({
+                'message':message.value,
+                'roomname' : roomame,
+                'sender' : username
+            }))
+            message.value = ''
+        }
+    </script>
+</body>
+
+</html>

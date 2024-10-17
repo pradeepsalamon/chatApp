@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chat</title>
+</head>
+<body>
+    <h1>Welcome To Chat App</h1>
+    <form id="form" method="post">
+        {% csrf_token %}
+        <input type="text" id="message" name="message" required>
+        <input type="submit" value="send">
+    </form>
+    <script>
+        let form = document.getElementById('form')
+        let url = 'ws://localhost:8000/ws/socket-server/'
+        const chatSocket = new WebSocket(url)
+        chatSocket.onmessage = e => {
+            let data = JSON.parse(e.data)
+            if (data.type === 'chat'){
+                document.querySelector('body').insertAdjacentHTML("beforeend", `<div><p>${data.message}</p></div>`)
+            }
+        }
+        form.addEventListener('submit', (e) => {
+            e.preventDefault()
+            message = e.target.message.value
+            chatSocket.send(JSON.stringify({
+                'message':message
+            }))
+            
+            form.reset()
+        })
+    </script>
+</body>
+</html>
