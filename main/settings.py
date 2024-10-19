@@ -27,6 +27,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://test-pow1.onrender.com',
+    'http://localhost:8000',
+]
+
 
 # Application definition
 
