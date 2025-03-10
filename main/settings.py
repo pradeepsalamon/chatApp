@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://django_1026_user:1GNyKRpE9fXPURXAZAJbHBotQMrzYX5g@dpg-crq0ulrtq21c73d978t0-a/django_1026')
+    'default': dj_database_url.parse('postgresql://django_nnrd_user:8i3IWC6sMgehcVtoMgjSVzpB1vqrhf9C@dpg-cv7am6pc1ekc73djrqp0-a.oregon-postgres.render.com/django_nnrd')
 }
 
 
