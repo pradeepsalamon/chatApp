@@ -102,7 +102,7 @@ WSGI_APPLICATION = 'main.wsgi.application'
 # }
 
 DATABASES = {
-    'default': dj_database_url.parse('postgresql://django_nnrd_user:8i3IWC6sMgehcVtoMgjSVzpB1vqrhf9C@dpg-cv7am6pc1ekc73djrqp0-a.oregon-postgres.render.com/django_nnrd')
+    'default': dj_database_url.parse('postgresql://chatappdb_te91_user:KCjAhC0qttYS50GW4sNdvaoJYsq1eGgi@dpg-d24idler433s73fpo780-a/chatappdb_te91')
 }
 
 
